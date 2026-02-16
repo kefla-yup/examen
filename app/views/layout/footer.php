@@ -36,6 +36,8 @@
                         <li><a href="<?php echo base_url('besoins'); ?>"><i class='bx bxs-notepad'></i>Besoins</a></li>
                         <li><a href="<?php echo base_url('dons'); ?>"><i class='bx bxs-gift'></i>Dons reçus</a></li>
                         <li><a href="<?php echo base_url('dispatches'); ?>"><i class='bx bxs-truck'></i>Distribution</a></li>
+                        <li><a href="<?php echo base_url('achats'); ?>"><i class='bx bxs-cart'></i>Achats</a></li>
+                        <li><a href="<?php echo base_url('recap'); ?>"><i class='bx bxs-bar-chart-alt-2'></i>Récapitulation</a></li>
                     </ul>
                 </div>
 

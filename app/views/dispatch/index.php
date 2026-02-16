@@ -14,8 +14,13 @@
         </div>
         <div class="d-flex gap-2">
             <form method="POST" action="<?php echo base_url('dispatches/simuler'); ?>" class="d-inline">
-                <button type="submit" class="btn btn-primary btn-lg" onclick="return confirm('Lancer la simulation du dispatch ? Les distributions existantes seront remplacées.');">
-                    <i class='bx bx-play-circle me-1'></i>Simuler le Dispatch
+                <button type="submit" class="btn btn-warning btn-lg" onclick="return confirm('Lancer la simulation du dispatch ? (Aperçu uniquement, rien ne sera enregistré)');">
+                    <i class='bx bx-play-circle me-1'></i>Simuler
+                </button>
+            </form>
+            <form method="POST" action="<?php echo base_url('dispatches/valider'); ?>" class="d-inline">
+                <button type="submit" class="btn btn-success btn-lg" onclick="return confirm('Valider et exécuter la distribution ? Les distributions existantes seront remplacées.');" <?php echo empty($simulation) ? 'disabled' : ''; ?>>
+                    <i class='bx bx-check-circle me-1'></i>Valider le Dispatch
                 </button>
             </form>
             <form method="POST" action="<?php echo base_url('dispatches/reset'); ?>" class="d-inline">
@@ -40,6 +45,59 @@
             </p>
         </div>
     </div>
+
+    <!-- Résultat de la simulation (aperçu) -->
+    <?php if(!empty($simulation) && !empty($simulation['dispatches'])): ?>
+    <div class="card border-warning mb-5">
+        <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class='bx bx-search-alt me-2'></i>Aperçu de la Simulation — <?php echo number_format($simulation['total'], 0, ',', ' '); ?> unités</h5>
+            <span class="badge bg-dark"><?php echo count($simulation['dispatches']); ?> attributions</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-modern table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Donateur</th>
+                            <th>Don</th>
+                            <th>Ville</th>
+                            <th>Besoin Couvert</th>
+                            <th>Quantité</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $si = 1; foreach($simulation['dispatches'] as $sim): ?>
+                        <tr>
+                            <td class="text-muted"><?php echo $si++; ?></td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm bg-warning-soft">
+                                        <i class='bx bx-user'></i>
+                                    </div>
+                                    <span class="fw-medium"><?php echo htmlspecialchars($sim['donateur']); ?></span>
+                                </div>
+                            </td>
+                            <td class="fw-medium"><?php echo htmlspecialchars($sim['don_designation']); ?></td>
+                            <td><i class='bx bxs-map-pin text-primary me-1'></i><?php echo htmlspecialchars($sim['ville_nom']); ?></td>
+                            <td><?php echo htmlspecialchars($sim['besoin_designation']); ?></td>
+                            <td><span class="fw-bold text-warning fs-6"><?php echo number_format($sim['quantite_attribuee'], 0, ',', ' '); ?></span></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-light text-center">
+            <p class="mb-2 text-muted"><i class='bx bx-info-circle me-1'></i>Ceci est un <strong>aperçu</strong>. Cliquez sur <strong>« Valider le Dispatch »</strong> pour confirmer la distribution.</p>
+            <form method="POST" action="<?php echo base_url('dispatches/valider'); ?>" class="d-inline">
+                <button type="submit" class="btn btn-success btn-lg" onclick="return confirm('Confirmer et exécuter cette distribution ?');">
+                    <i class='bx bx-check-circle me-1'></i>Valider cette Distribution
+                </button>
+            </form>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <!-- Stats par ville -->
     <?php if(!empty($stats)): ?>
