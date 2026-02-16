@@ -1,5 +1,5 @@
-CREATE DATABASE bngrc_dons;
-USE bngrc_dons;
+CREATE DATABASE db_s2_ETU003888;
+USE db_s2_ETU003888;
 
 
 CREATE TABLE villes (
