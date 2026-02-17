@@ -39,7 +39,9 @@ function asset($path) {
 Flight::map('baseUrl', function($path = '') {
     return base_url($path);
 });
-Flight::set('flight.base_url', BASE_URL);
+// Ne pas définir flight.base_url car base_url() inclut déjà le préfixe.
+// Flight::_redirect() re-prépend flight.base_url, ce qui double le chemin.
+Flight::set('flight.base_url', '/');
 
 $dbConfig = require __DIR__ . '/app/Config/database.php';
 

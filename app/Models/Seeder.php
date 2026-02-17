@@ -60,12 +60,11 @@ class Seeder extends BaseModel {
     private function seedVilles() {
         $stmt = $this->db->prepare("INSERT INTO villes (nom, region, population) VALUES (?, ?, ?)");
         $villes = [
+            ['Toamasina', 'Atsinanana', 55000],
             ['Mananjary', 'Vatovavy-Fitovinany', 35000],
-            ['Ikongo', 'Vatovavy-Fitovinany', 22000],
-            ['Nosy Varika', 'Vatovavy-Fitovinany', 18000],
             ['Farafangana', 'Atsimo-Atsinanana', 40000],
-            ['Vangaindrano', 'Atsimo-Atsinanana', 28000],
-            ['Mahanoro', 'Atsinanana', 30000]
+            ['Nosy Be', 'Diana', 45000],
+            ['Morondava', 'Menabe', 38000]
         ];
         foreach ($villes as $v) {
             $stmt->execute($v);
@@ -75,30 +74,42 @@ class Seeder extends BaseModel {
     private function seedBesoins() {
         $stmt = $this->db->prepare("INSERT INTO besoins (ville_id, type_besoin_id, designation, prix_unitaire, quantite) VALUES (?, ?, ?, ?, ?)");
 
-        // Mananjary (id=1)
         $besoins = [
-            [1, 1, 'Riz (kg)', 2500.00, 5000],
-            [1, 1, 'Huile (litre)', 8000.00, 1000],
-            [1, 2, 'Tôle (feuille)', 45000.00, 500],
-            [1, 2, 'Clou (kg)', 6000.00, 200],
-            [1, 3, 'Aide financière (Ar)', 1.00, 50000000],
+            // Toamasina (id=1)
+            [1, 1, 'Riz (kg)', 3000.00, 800],
+            [1, 1, 'Eau (L)', 1000.00, 1500],
+            [1, 2, 'Tôle', 25000.00, 120],
+            [1, 2, 'Bâche', 15000.00, 200],
+            [1, 3, 'Argent', 1.00, 12000000],
+            [1, 2, 'Groupe', 6750000.00, 3],
 
-            // Ikongo (id=2)
-            [2, 1, 'Riz (kg)', 2500.00, 3000],
-            [2, 1, 'Eau potable (litre)', 500.00, 10000],
-            [2, 2, 'Bois (planche)', 15000.00, 300],
-            [2, 3, 'Aide financière (Ar)', 1.00, 20000000],
+            // Mananjary (id=2)
+            [2, 1, 'Riz (kg)', 3000.00, 500],
+            [2, 1, 'Huile (L)', 6000.00, 120],
+            [2, 2, 'Tôle', 25000.00, 80],
+            [2, 2, 'Clous (kg)', 8000.00, 60],
+            [2, 3, 'Argent', 1.00, 6000000],
 
-            // Nosy Varika (id=3)
-            [3, 1, 'Riz (kg)', 2500.00, 2000],
-            [3, 2, 'Ciment (sac)', 35000.00, 100],
-            [3, 2, 'Tôle (feuille)', 45000.00, 200],
+            // Farafangana (id=3)
+            [3, 1, 'Riz (kg)', 3000.00, 600],
+            [3, 1, 'Eau (L)', 1000.00, 1000],
+            [3, 2, 'Bâche', 15000.00, 150],
+            [3, 2, 'Bois', 10000.00, 100],
+            [3, 3, 'Argent', 1.00, 8000000],
 
-            // Farafangana (id=4)
-            [4, 1, 'Riz (kg)', 2500.00, 8000],
-            [4, 1, 'Huile (litre)', 8000.00, 2000],
-            [4, 2, 'Tôle (feuille)', 45000.00, 800],
-            [4, 3, 'Aide financière (Ar)', 1.00, 80000000],
+            // Nosy Be (id=4)
+            [4, 1, 'Riz (kg)', 3000.00, 300],
+            [4, 1, 'Haricots', 4000.00, 200],
+            [4, 2, 'Tôle', 25000.00, 40],
+            [4, 2, 'Clous (kg)', 8000.00, 30],
+            [4, 3, 'Argent', 1.00, 4000000],
+
+            // Morondava (id=5)
+            [5, 1, 'Riz (kg)', 3000.00, 700],
+            [5, 1, 'Eau (L)', 1000.00, 1200],
+            [5, 2, 'Bâche', 15000.00, 180],
+            [5, 2, 'Bois', 10000.00, 150],
+            [5, 3, 'Argent', 1.00, 10000000],
         ];
 
         foreach ($besoins as $b) {
@@ -110,14 +121,22 @@ class Seeder extends BaseModel {
         $stmt = $this->db->prepare("INSERT INTO dons (donateur, type_besoin_id, designation, quantite, date_don) VALUES (?, ?, ?, ?, ?)");
 
         $dons = [
-            ['Croix Rouge', 1, 'Riz (kg)', 3000, '2026-02-01'],
-            ['UNICEF', 1, 'Huile (litre)', 500, '2026-02-02'],
-            ['Gouvernement', 2, 'Tôle (feuille)', 300, '2026-02-03'],
-            ['Association Solidarité', 1, 'Riz (kg)', 2000, '2026-02-05'],
-            ['Banque Mondiale', 3, 'Aide financière (Ar)', 30000000, '2026-02-06'],
-            ['Anonyme', 2, 'Clou (kg)', 150, '2026-02-07'],
-            ['ONG Care', 1, 'Eau potable (litre)', 5000, '2026-02-08'],
-            ['Communauté locale', 2, 'Bois (planche)', 100, '2026-02-10'],
+            ['Anonyme', 3, 'Argent', 5000000, '2026-02-16'],
+            ['Anonyme', 3, 'Argent', 3000000, '2026-02-16'],
+            ['Anonyme', 3, 'Argent', 4000000, '2026-02-17'],
+            ['Anonyme', 3, 'Argent', 1500000, '2026-02-17'],
+            ['Anonyme', 3, 'Argent', 6000000, '2026-02-17'],
+            ['Anonyme', 1, 'Riz (kg)', 400, '2026-02-16'],
+            ['Anonyme', 1, 'Eau (L)', 600, '2026-02-16'],
+            ['Anonyme', 2, 'Tôle', 50, '2026-02-17'],
+            ['Anonyme', 2, 'Bâche', 70, '2026-02-17'],
+            ['Anonyme', 1, 'Haricots', 100, '2026-02-17'],
+            ['Anonyme', 1, 'Riz (kg)', 2000, '2026-02-18'],
+            ['Anonyme', 2, 'Tôle', 300, '2026-02-18'],
+            ['Anonyme', 1, 'Eau (L)', 5000, '2026-02-18'],
+            ['Anonyme', 3, 'Argent', 20000000, '2026-02-19'],
+            ['Anonyme', 2, 'Bâche', 500, '2026-02-19'],
+            ['Anonyme', 1, 'Haricots', 88, '2026-02-17'],
         ];
 
         foreach ($dons as $d) {

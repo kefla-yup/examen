@@ -30,11 +30,20 @@ class DispatchController {
      */
     public static function simuler() {
         $dispatchModel = new Dispatch();
+        $mode = $_POST['mode'] ?? 'max';
+        
+        $modeLabels = [
+            'max' => 'Priorité besoins maximum',
+            'min' => 'Priorité besoins minimum',
+            'proportionnel' => 'Distribution proportionnelle'
+        ];
+        $modeLabel = $modeLabels[$mode] ?? $modeLabels['max'];
         
         try {
-            $result = $dispatchModel->simulerPreview();
+            $result = $dispatchModel->simulerPreview($mode);
+            $result['mode_label'] = $modeLabel;
             $_SESSION['simulation_result'] = $result;
-            Flight::flash('info', 'Simulation terminée ! ' . number_format($result['total'], 0, ',', ' ') . ' unités seraient distribuées. Vérifiez le résultat puis cliquez sur « Valider » pour confirmer.');
+            Flight::flash('info', 'Simulation (' . $modeLabel . ') terminée ! ' . number_format($result['total'], 0, ',', ' ') . ' unités seraient distribuées. Vérifiez le résultat puis cliquez sur « Valider » pour confirmer.');
         } catch (\Exception $e) {
             Flight::flash('error', 'Erreur lors de la simulation : ' . $e->getMessage());
         }
