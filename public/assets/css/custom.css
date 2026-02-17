@@ -1175,7 +1175,7 @@ main.site-main { flex: 1; }
 }
 
 .footer-credits-label {
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: rgba(255,255,255,0.35);
@@ -1186,15 +1186,15 @@ main.site-main { flex: 1; }
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius-md);
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 120px;
+  min-width: 160px;
 }
 
 .footer-credit-etu {
-  font-size: 0.7rem;
+  font-size: 0.95rem;
   color: var(--accent);
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -1202,7 +1202,7 @@ main.site-main { flex: 1; }
 
 .footer-credit-name {
   color: rgba(255,255,255,0.7);
-  font-size: 0.85rem;
+  font-size: 1.1rem;
   font-weight: 600;
 }
 

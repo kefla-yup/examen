@@ -54,24 +54,20 @@
         </div>
     </div>
 
-    <!-- Barre de progression globale -->
+    <!-- Graphique Couverture Globale -->
     <div class="card mb-5">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h5 class="mb-0"><i class='bx bx-trending-up me-2'></i>Couverture Globale</h5>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0"><i class='bx bx-bar-chart-alt me-2'></i>Couverture Globale</h5>
                 <span class="badge bg-primary fs-6" id="recap-pourcentage"><?php echo $pourcentageCouverture; ?>%</span>
             </div>
-            <div class="progress" style="height: 25px;">
-                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" id="recap-progress-bar" role="progressbar" style="width: <?php echo $pourcentageCouverture; ?>%;" aria-valuenow="<?php echo $pourcentageCouverture; ?>" aria-valuemin="0" aria-valuemax="100">
-                    <?php echo $pourcentageCouverture; ?>%
-                </div>
-            </div>
+            <canvas id="couvertureChart" height="120"></canvas>
             <div class="row mt-3">
                 <div class="col-md-6">
-                    <small class="text-muted">Satisfaits via Distribution : <strong id="recap-dispatch"><?php echo number_format($montantBesoinsSatisfaitsDispatch, 0, ',', ' '); ?> Ar</strong></small>
+                    <small class="text-muted"><span class="d-inline-block rounded-circle me-1" style="width:10px;height:10px;background:#198754;"></span>Distribution : <strong id="recap-dispatch"><?php echo number_format($montantBesoinsSatisfaitsDispatch, 0, ',', ' '); ?> Ar</strong></small>
                 </div>
                 <div class="col-md-6">
-                    <small class="text-muted">Satisfaits via Achats : <strong id="recap-achats"><?php echo number_format($montantBesoinsSatisfaitsAchats, 0, ',', ' '); ?> Ar</strong></small>
+                    <small class="text-muted"><span class="d-inline-block rounded-circle me-1" style="width:10px;height:10px;background:#0dcaf0;"></span>Achats : <strong id="recap-achats"><?php echo number_format($montantBesoinsSatisfaitsAchats, 0, ',', ' '); ?> Ar</strong></small>
                 </div>
             </div>
         </div>
@@ -124,10 +120,74 @@
     </div>
 </section>
 
+<script src="<?php echo asset('js/chart.min.js'); ?>"></script>
 <script>
 function formatNumber(num) {
     return Math.round(num).toLocaleString('fr-FR');
 }
+
+// Données initiales pour le graphique
+var chartData = {
+    besoinsTotal: <?php echo $montantBesoinsTotal; ?>,
+    satisfaitsDispatch: <?php echo $montantBesoinsSatisfaitsDispatch; ?>,
+    satisfaitsAchats: <?php echo $montantBesoinsSatisfaitsAchats; ?>,
+    restants: <?php echo $montantBesoinsRestants; ?>
+};
+
+// Création du graphique
+var ctx = document.getElementById('couvertureChart').getContext('2d');
+var couvertureChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Besoins Totaux', 'Distribution', 'Achats', 'Restants'],
+        datasets: [{
+            label: 'Montant (Ar)',
+            data: [chartData.besoinsTotal, chartData.satisfaitsDispatch, chartData.satisfaitsAchats, chartData.restants],
+            backgroundColor: [
+                'rgba(108, 117, 125, 0.8)',
+                'rgba(25, 135, 84, 0.8)',
+                'rgba(13, 202, 240, 0.8)',
+                'rgba(220, 53, 69, 0.8)'
+            ],
+            borderColor: [
+                'rgb(108, 117, 125)',
+                'rgb(25, 135, 84)',
+                'rgb(13, 202, 240)',
+                'rgb(220, 53, 69)'
+            ],
+            borderWidth: 2,
+            borderRadius: 6
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return formatNumber(context.raw) + ' Ar';
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return formatNumber(value) + ' Ar';
+                    }
+                },
+                grid: { color: 'rgba(0,0,0,0.05)' }
+            },
+            x: {
+                grid: { display: false }
+            }
+        }
+    }
+});
 
 function actualiserRecap() {
     var btn = document.getElementById('btnActualiser');
@@ -146,12 +206,15 @@ function actualiserRecap() {
             document.getElementById('recap-satisfaits').textContent = formatNumber(data.montantBesoinsSatisfaits);
             document.getElementById('recap-restants').textContent = formatNumber(data.montantBesoinsRestants);
             
-            // Mettre à jour la barre de progression
+            // Mettre à jour le graphique
             document.getElementById('recap-pourcentage').textContent = data.pourcentageCouverture + '%';
-            var progressBar = document.getElementById('recap-progress-bar');
-            progressBar.style.width = data.pourcentageCouverture + '%';
-            progressBar.textContent = data.pourcentageCouverture + '%';
-            progressBar.setAttribute('aria-valuenow', data.pourcentageCouverture);
+            couvertureChart.data.datasets[0].data = [
+                data.montantBesoinsTotal,
+                data.montantBesoinsSatisfaitsDispatch,
+                data.montantBesoinsSatisfaitsAchats,
+                data.montantBesoinsRestants
+            ];
+            couvertureChart.update();
 
             // Mettre à jour les détails dispatch/achats
             document.getElementById('recap-dispatch').textContent = formatNumber(data.montantBesoinsSatisfaitsDispatch) + ' Ar';
