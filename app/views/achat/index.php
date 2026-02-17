@@ -12,6 +12,12 @@
             <h1 class="page-title"><i class='bx bxs-cart me-2'></i>Achats via Dons Argent</h1>
             <p class="page-subtitle">Acheter les besoins en Nature et Matériaux avec les dons en Argent</p>
         </div>
+        <form method="POST" action="<?php echo base_url('reinitialiser'); ?>" class="d-inline">
+            <input type="hidden" name="redirect" value="achats">
+            <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Réinitialiser toutes les données aux valeurs par défaut ? Les données ajoutées seront perdues.');">
+                <i class='bx bx-reset me-1'></i>Réinitialiser
+            </button>
+        </form>
     </div>
 
     <!-- Solde et infos -->

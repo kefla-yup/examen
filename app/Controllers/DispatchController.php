@@ -43,13 +43,21 @@ class DispatchController {
     }
 
     /**
-     * Valider et appliquer le dispatch réellement
+     * Valider et appliquer le dispatch réellement (depuis la simulation en session)
      */
     public static function valider() {
         $dispatchModel = new Dispatch();
         
+        // Vérifier qu'une simulation existe en session
+        $simulation = $_SESSION['simulation_result'] ?? null;
+        if (empty($simulation) || empty($simulation['dispatches'])) {
+            Flight::flash('error', 'Aucune simulation à valider. Veuillez d\'abord lancer une simulation.');
+            Flight::redirect(base_url('/dispatches'));
+            return;
+        }
+        
         try {
-            $total = $dispatchModel->executerDispatch();
+            $total = $dispatchModel->executerDepuisSimulation($simulation['dispatches']);
             unset($_SESSION['simulation_result']);
             Flight::flash('success', 'Distribution validée ! ' . number_format($total, 0, ',', ' ') . ' unités ont été distribuées avec succès.');
         } catch (\Exception $e) {

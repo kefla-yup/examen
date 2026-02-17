@@ -12,9 +12,17 @@
             <h1 class="page-title"><i class='bx bxs-bar-chart-alt-2 me-2'></i>Récapitulation</h1>
             <p class="page-subtitle">Vue d'ensemble des besoins totaux, satisfaits et restants en montant</p>
         </div>
-        <button id="btnActualiser" class="btn btn-primary btn-lg" onclick="actualiserRecap()">
-            <i class='bx bx-refresh me-1' id="refreshIcon"></i>Actualiser
-        </button>
+        <div class="d-flex gap-2">
+            <button id="btnActualiser" class="btn btn-primary btn-lg" onclick="actualiserRecap()">
+                <i class='bx bx-refresh me-1' id="refreshIcon"></i>Actualiser
+            </button>
+            <form method="POST" action="<?php echo base_url('reinitialiser'); ?>" class="d-inline">
+                <input type="hidden" name="redirect" value="recap">
+                <button type="submit" class="btn btn-outline-danger btn-lg" onclick="return confirm('Réinitialiser toutes les données aux valeurs par défaut ? Les données ajoutées seront perdues.');">
+                    <i class='bx bx-reset me-1'></i>Réinitialiser
+                </button>
+            </form>
+        </div>
     </div>
 
     <!-- Cartes résumé -->

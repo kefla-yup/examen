@@ -24,8 +24,14 @@
                 </button>
             </form>
             <form method="POST" action="<?php echo base_url('dispatches/reset'); ?>" class="d-inline">
-                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Réinitialiser toutes les distributions ?');">
-                    <i class='bx bx-reset me-1'></i>Réinitialiser
+                <button type="submit" class="btn btn-outline-secondary" onclick="return confirm('Réinitialiser toutes les distributions ?');">
+                    <i class='bx bx-reset me-1'></i>Reset Dispatches
+                </button>
+            </form>
+            <form method="POST" action="<?php echo base_url('reinitialiser'); ?>" class="d-inline">
+                <input type="hidden" name="redirect" value="dispatches">
+                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Réinitialiser TOUTES les données aux valeurs par défaut ? Les données ajoutées seront perdues.');">
+                    <i class='bx bx-refresh me-1'></i>Réinitialiser Tout
                 </button>
             </form>
         </div>

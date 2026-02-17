@@ -12,9 +12,17 @@
             <h1 class="page-title"><i class='bx bxs-notepad me-2'></i>Besoins des Sinistrés</h1>
             <p class="page-subtitle">Liste de tous les besoins identifiés par ville</p>
         </div>
-        <a href="<?php echo base_url('besoins/nouveau'); ?>" class="btn btn-primary">
-            <i class='bx bx-plus me-1'></i>Nouveau Besoin
-        </a>
+        <div class="d-flex gap-2">
+            <a href="<?php echo base_url('besoins/nouveau'); ?>" class="btn btn-primary">
+                <i class='bx bx-plus me-1'></i>Nouveau Besoin
+            </a>
+            <form method="POST" action="<?php echo base_url('reinitialiser'); ?>" class="d-inline">
+                <input type="hidden" name="redirect" value="besoins">
+                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Réinitialiser toutes les données aux valeurs par défaut ? Les données ajoutées seront perdues.');">
+                    <i class='bx bx-reset me-1'></i>Réinitialiser
+                </button>
+            </form>
+        </div>
     </div>
 
     <!-- Filter by ville -->

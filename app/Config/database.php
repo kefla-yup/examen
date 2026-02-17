@@ -1,9 +1,9 @@
 <?php
 return [
-    'host' => '172.16.7.108',
-    'username' => 'ETU003888',
-    'password' => 'bFr05fcc',
-    'database' => 'db_s2_ETU003888',
+    'host' => '127.0.0.1',
+    'username' => 'root',
+    'password' => '',
+    'database' => 'bngrc_dons',
     'charset' => 'utf8mb4'
 ];
 ?>

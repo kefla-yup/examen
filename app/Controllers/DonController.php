@@ -24,9 +24,18 @@ class DonController {
     public static function create() {
         $besoinModel = new Besoin();
 
+        // Récupérer les désignations distinctes groupées par type
+        $db = Flight::db();
+        $stmt = $db->query("SELECT DISTINCT type_besoin_id, designation FROM besoins ORDER BY type_besoin_id, designation");
+        $designationsParType = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $designationsParType[$row['type_besoin_id']][] = $row['designation'];
+        }
+
         Flight::render('don/create', [
             'title' => 'BNGRC - Nouveau Don',
-            'types' => $besoinModel->getTypes()
+            'types' => $besoinModel->getTypes(),
+            'designationsParType' => $designationsParType
         ]);
     }
 

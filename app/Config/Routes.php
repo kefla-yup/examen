@@ -45,6 +45,9 @@ class Routes {
         Flight::route('GET /recap', ['App\Controllers\RecapController', 'index']);
         Flight::route('GET /recap/ajax', ['App\Controllers\RecapController', 'ajaxData']);
 
+        // Réinitialisation des données
+        Flight::route('POST /reinitialiser', ['App\Controllers\DashboardController', 'reinitialiser']);
+
         Flight::map('notFound', function() {
             Flight::render('errors/404', ['title' => 'Page non trouvée']);
         });

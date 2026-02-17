@@ -6,6 +6,7 @@ use App\Models\Ville;
 use App\Models\Besoin;
 use App\Models\Don;
 use App\Models\Dispatch;
+use App\Models\Seeder;
 
 class DashboardController {
     
@@ -35,5 +36,21 @@ class DashboardController {
             'recentDons' => $recentDons,
             'types' => $types
         ]);
+    }
+
+    public static function reinitialiser() {
+        $seeder = new Seeder();
+        $redirect = $_POST['redirect'] ?? '/';
+        
+        try {
+            $seeder->resetToDefault();
+            // Nettoyer la session de simulation
+            unset($_SESSION['simulation_result']);
+            Flight::flash('success', 'Données réinitialisées aux valeurs par défaut avec succès.');
+        } catch (\Exception $e) {
+            Flight::flash('error', 'Erreur lors de la réinitialisation : ' . $e->getMessage());
+        }
+        
+        Flight::redirect(base_url($redirect));
     }
 }
