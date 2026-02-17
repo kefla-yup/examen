@@ -6,9 +6,7 @@ session_start();
 Flight::set('flight.views.path', __DIR__ . '/app/views');
 Flight::set('flight.log_errors', true);
 
-// Détection automatique du BASE_URL
-// Méthode 1: via SCRIPT_NAME (fonctionne avec .htaccess)
-// Méthode 2: via REQUEST_URI + document root (fallback)
+
 $baseUrl = '';
 if (!empty($_SERVER['SCRIPT_NAME'])) {
     $dir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
@@ -16,7 +14,7 @@ if (!empty($_SERVER['SCRIPT_NAME'])) {
         $baseUrl = $dir;
     }
 }
-// Fallback: calculer depuis le chemin physique du fichier et DOCUMENT_ROOT
+
 if ($baseUrl === '' && !empty($_SERVER['DOCUMENT_ROOT'])) {
     $docRoot = rtrim(str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'])), '/');
     $appRoot = rtrim(str_replace('\\', '/', __DIR__), '/');
@@ -41,7 +39,9 @@ function asset($path) {
 Flight::map('baseUrl', function($path = '') {
     return base_url($path);
 });
-Flight::set('flight.base_url', BASE_URL);
+// Ne pas définir flight.base_url car base_url() inclut déjà le préfixe.
+// Flight::_redirect() re-prépend flight.base_url, ce qui double le chemin.
+Flight::set('flight.base_url', '/');
 
 $dbConfig = require __DIR__ . '/app/Config/database.php';
 

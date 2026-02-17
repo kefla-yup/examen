@@ -33,7 +33,20 @@ class Routes {
 
         Flight::route('GET /dispatches', ['App\Controllers\DispatchController', 'index']);
         Flight::route('POST /dispatches/simuler', ['App\Controllers\DispatchController', 'simuler']);
+        Flight::route('POST /dispatches/valider', ['App\Controllers\DispatchController', 'valider']);
         Flight::route('POST /dispatches/reset', ['App\Controllers\DispatchController', 'reset']);
+
+        // Achats
+        Flight::route('GET /achats', ['App\Controllers\AchatController', 'index']);
+        Flight::route('POST /achats/effectuer', ['App\Controllers\AchatController', 'store']);
+        Flight::route('POST /achats/@id/supprimer', ['App\Controllers\AchatController', 'delete']);
+
+        // Récapitulation
+        Flight::route('GET /recap', ['App\Controllers\RecapController', 'index']);
+        Flight::route('GET /recap/ajax', ['App\Controllers\RecapController', 'ajaxData']);
+
+        // Réinitialisation des données
+        Flight::route('POST /reinitialiser', ['App\Controllers\DashboardController', 'reinitialiser']);
 
         Flight::map('notFound', function() {
             Flight::render('errors/404', ['title' => 'Page non trouvée']);

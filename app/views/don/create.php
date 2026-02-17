@@ -40,12 +40,34 @@
                     </div>
                     <div class="mb-4">
                         <label for="designation" class="form-label">Désignation <span class="text-danger">*</span></label>
-                        <div class="input-icon">
-                            <i class='bx bx-package'></i>
-                            <input type="text" class="form-control" id="designation" name="designation" required placeholder="Ex: Riz (kg), Tôle (feuille)...">
-                        </div>
-                        <small class="text-muted">La désignation doit correspondre exactement aux besoins pour le dispatch automatique</small>
+                        <select class="form-select" id="designation" name="designation" required disabled>
+                            <option value="">-- Sélectionnez d'abord un type --</option>
+                        </select>
+                        <small class="text-muted">La liste se met à jour automatiquement selon le type choisi</small>
                     </div>
+
+                    <script>
+                    var designationsParType = <?php echo json_encode($designationsParType ?? []); ?>;
+                    document.getElementById('type_besoin_id').addEventListener('change', function() {
+                        var typeId = this.value;
+                        var select = document.getElementById('designation');
+                        select.innerHTML = '';
+                        if (!typeId) {
+                            select.innerHTML = '<option value="">-- Sélectionnez d\'abord un type --</option>';
+                            select.disabled = true;
+                            return;
+                        }
+                        select.disabled = false;
+                        var options = designationsParType[typeId] || [];
+                        select.innerHTML = '<option value="">-- Choisir une désignation --</option>';
+                        options.forEach(function(d) {
+                            var opt = document.createElement('option');
+                            opt.value = d;
+                            opt.textContent = d;
+                            select.appendChild(opt);
+                        });
+                    });
+                    </script>
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <label for="quantite" class="form-label">Quantité <span class="text-danger">*</span></label>

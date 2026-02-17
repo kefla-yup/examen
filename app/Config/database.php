@@ -1,6 +1,6 @@
 <?php
 return [
-    'host' => '172.16.7.108',
+    'host' => 'localhost:3306',
     'username' => 'ETU003888',
     'password' => 'bFr05fcc',
     'database' => 'db_s2_ETU003888',

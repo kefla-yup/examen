@@ -12,9 +12,17 @@
             <h1 class="page-title"><i class='bx bxs-gift me-2'></i>Dons Reçus</h1>
             <p class="page-subtitle">Liste de tous les dons enregistrés</p>
         </div>
-        <a href="<?php echo base_url('dons/nouveau'); ?>" class="btn btn-success">
-            <i class='bx bx-plus me-1'></i>Nouveau Don
-        </a>
+        <div class="d-flex gap-2">
+            <a href="<?php echo base_url('dons/nouveau'); ?>" class="btn btn-success">
+                <i class='bx bx-plus me-1'></i>Nouveau Don
+            </a>
+            <form method="POST" action="<?php echo base_url('reinitialiser'); ?>" class="d-inline">
+                <input type="hidden" name="redirect" value="dons">
+                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Réinitialiser toutes les données aux valeurs par défaut ? Les données ajoutées seront perdues.');">
+                    <i class='bx bx-reset me-1'></i>Réinitialiser
+                </button>
+            </form>
+        </div>
     </div>
 
     <div class="data-table-card">

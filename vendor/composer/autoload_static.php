@@ -27,15 +27,20 @@ class ComposerStaticInit7db08f3737ecc0038373c764044e4861
 
     public static $classMap = array (
         'App\\Config\\Routes' => __DIR__ . '/../..' . '/app/Config/Routes.php',
-        'App\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Controllers/AuthController.php',
-        'App\\Controllers\\ExchangeController' => __DIR__ . '/../..' . '/app/Controllers/ExchangeController.php',
-        'App\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Controllers/HomeController.php',
-        'App\\Controllers\\ObjectController' => __DIR__ . '/../..' . '/app/Controllers/ObjectController.php',
-        'App\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Controllers/UserController.php',
+        'App\\Controllers\\AchatController' => __DIR__ . '/../..' . '/app/Controllers/AchatController.php',
+        'App\\Controllers\\BesoinController' => __DIR__ . '/../..' . '/app/Controllers/BesoinController.php',
+        'App\\Controllers\\DashboardController' => __DIR__ . '/../..' . '/app/Controllers/DashboardController.php',
+        'App\\Controllers\\DispatchController' => __DIR__ . '/../..' . '/app/Controllers/DispatchController.php',
+        'App\\Controllers\\DonController' => __DIR__ . '/../..' . '/app/Controllers/DonController.php',
+        'App\\Controllers\\RecapController' => __DIR__ . '/../..' . '/app/Controllers/RecapController.php',
+        'App\\Controllers\\VilleController' => __DIR__ . '/../..' . '/app/Controllers/VilleController.php',
+        'App\\Models\\Achat' => __DIR__ . '/../..' . '/app/Models/Achat.php',
         'App\\Models\\BaseModel' => __DIR__ . '/../..' . '/app/Models/BaseModel.php',
-        'App\\Models\\Echange' => __DIR__ . '/../..' . '/app/Models/Echange.php',
-        'App\\Models\\Objet' => __DIR__ . '/../..' . '/app/Models/Objet.php',
-        'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Models\\Besoin' => __DIR__ . '/../..' . '/app/Models/Besoin.php',
+        'App\\Models\\Dispatch' => __DIR__ . '/../..' . '/app/Models/Dispatch.php',
+        'App\\Models\\Don' => __DIR__ . '/../..' . '/app/Models/Don.php',
+        'App\\Models\\Seeder' => __DIR__ . '/../..' . '/app/Models/Seeder.php',
+        'App\\Models\\Ville' => __DIR__ . '/../..' . '/app/Models/Ville.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 

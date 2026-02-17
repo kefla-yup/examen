@@ -12,9 +12,17 @@
             <h1 class="page-title"><i class='bx bxs-city me-2'></i>Villes Sinistrées</h1>
             <p class="page-subtitle">Gestion des villes touchées par les catastrophes</p>
         </div>
-        <a href="<?php echo base_url('villes/nouveau'); ?>" class="btn btn-primary">
-            <i class='bx bx-plus me-1'></i>Nouvelle Ville
-        </a>
+        <div class="d-flex gap-2">
+            <a href="<?php echo base_url('villes/nouveau'); ?>" class="btn btn-primary">
+                <i class='bx bx-plus me-1'></i>Nouvelle Ville
+            </a>
+            <form method="POST" action="<?php echo base_url('reinitialiser'); ?>" class="d-inline">
+                <input type="hidden" name="redirect" value="villes">
+                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Réinitialiser toutes les données aux valeurs par défaut ? Les données ajoutées seront perdues.');">
+                    <i class='bx bx-reset me-1'></i>Réinitialiser
+                </button>
+            </form>
+        </div>
     </div>
 
     <div class="row g-4">

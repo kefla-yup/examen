@@ -64,6 +64,16 @@
                             <i class='bx bxs-truck me-1'></i>Distribution
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo strpos($path, '/achats') === 0 ? 'active' : ''; ?>" href="<?php echo base_url('achats'); ?>">
+                            <i class='bx bxs-cart me-1'></i>Achats
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo strpos($path, '/recap') === 0 ? 'active' : ''; ?>" href="<?php echo base_url('recap'); ?>">
+                            <i class='bx bxs-bar-chart-alt-2 me-1'></i>Récap
+                        </a>
+                    </li>
                 </ul>
                 <div class="nav-actions d-flex align-items-center gap-2">
                     <a href="<?php echo base_url('dons/nouveau'); ?>" class="btn btn-nav-cta">

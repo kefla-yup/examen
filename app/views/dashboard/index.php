@@ -17,6 +17,12 @@
                     <a href="<?php echo base_url('dispatches'); ?>" class="btn btn-hero-outline">
                         <i class='bx bxs-truck'></i>Voir Distribution
                     </a>
+                    <form method="POST" action="<?php echo base_url('reinitialiser'); ?>" class="d-inline">
+                        <input type="hidden" name="redirect" value="/">
+                        <button type="submit" class="btn btn-hero-outline" style="border-color: rgba(255,100,100,0.5); color: #ff6b6b;" onclick="return confirm('Réinitialiser toutes les données aux valeurs par défaut ? Les données ajoutées seront perdues.');">
+                            <i class='bx bx-reset'></i>Réinitialiser
+                        </button>
+                    </form>
                 </div>
             </div>
             <div class="col-lg-4 d-none d-lg-flex justify-content-center">
