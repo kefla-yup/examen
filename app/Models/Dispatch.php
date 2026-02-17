@@ -53,6 +53,128 @@ class Dispatch extends BaseModel {
     }
 
 
+    public function simulerPreview() {
+        // Simule le dispatch SANS écrire en base : retourne le résultat prévu
+        $donsSql = "SELECT d.* FROM dons d ORDER BY d.date_don ASC, d.id ASC";
+        $donsStmt = $this->db->query($donsSql);
+        $dons = $donsStmt->fetchAll();
+
+        // Charger les dispatches existants pour calculer les restes
+        $existingDisp = [];
+        $edStmt = $this->db->query("SELECT besoin_id, SUM(quantite_attribuee) as qty FROM dispatches GROUP BY besoin_id");
+        foreach ($edStmt->fetchAll() as $row) {
+            $existingDisp[$row['besoin_id']] = (int)$row['qty'];
+        }
+
+        // Charger les dons déjà dispatched
+        $donDisp = [];
+        $ddStmt = $this->db->query("SELECT don_id, SUM(quantite_attribuee) as qty FROM dispatches GROUP BY don_id");
+        foreach ($ddStmt->fetchAll() as $row) {
+            $donDisp[$row['don_id']] = (int)$row['qty'];
+        }
+
+        $simulationResults = [];
+        $totalDispatched = 0;
+        // Copier les restes pour la simulation
+        $simBesoinReste = $existingDisp;
+
+        foreach ($dons as $don) {
+            $resteDon = $don['quantite'] - ($donDisp[$don['id']] ?? 0);
+            if ($resteDon <= 0) continue;
+
+            $besoinsSql = "SELECT b.*, v.nom as ville_nom
+                          FROM besoins b
+                          JOIN villes v ON b.ville_id = v.id
+                          WHERE b.designation = ? AND b.type_besoin_id = ?
+                          ORDER BY b.quantite DESC, b.ville_id ASC";
+            $besoinsStmt = $this->db->prepare($besoinsSql);
+            $besoinsStmt->execute([$don['designation'], $don['type_besoin_id']]);
+            $besoins = $besoinsStmt->fetchAll();
+
+            foreach ($besoins as $besoin) {
+                if ($resteDon <= 0) break;
+
+                $dejaDist = $simBesoinReste[$besoin['id']] ?? 0;
+                $resteBesoin = $besoin['quantite'] - $dejaDist;
+                if ($resteBesoin <= 0) continue;
+
+                $aDistribuer = min($resteDon, $resteBesoin);
+
+                if ($aDistribuer > 0) {
+                    $simulationResults[] = [
+                        'donateur' => $don['donateur'],
+                        'don_designation' => $don['designation'],
+                        'ville_nom' => $besoin['ville_nom'],
+                        'ville_id' => $besoin['ville_id'],
+                        'besoin_designation' => $besoin['designation'],
+                        'besoin_id' => $besoin['id'],
+                        'don_id' => $don['id'],
+                        'quantite_attribuee' => $aDistribuer
+                    ];
+                    $resteDon -= $aDistribuer;
+                    $totalDispatched += $aDistribuer;
+                    $simBesoinReste[$besoin['id']] = $dejaDist + $aDistribuer;
+                }
+            }
+        }
+
+        return [
+            'dispatches' => $simulationResults,
+            'total' => $totalDispatched
+        ];
+    }
+
+    public function executerDispatch() {
+        // Exécute réellement le dispatch (reset + recréation)
+        $this->resetAll();
+
+        $donsSql = "SELECT d.* FROM dons d ORDER BY d.date_don ASC, d.id ASC";
+        $donsStmt = $this->db->query($donsSql);
+        $dons = $donsStmt->fetchAll();
+
+        $totalDispatched = 0;
+
+        foreach ($dons as $don) {
+            $resteDon = $don['quantite'];
+
+            $besoinsSql = "SELECT b.*, v.nom as ville_nom,
+                            COALESCE(disp.qty, 0) as deja_distribue,
+                            (b.quantite - COALESCE(disp.qty, 0)) as reste_besoin
+                          FROM besoins b
+                          JOIN villes v ON b.ville_id = v.id
+                          LEFT JOIN (
+                              SELECT besoin_id, SUM(quantite_attribuee) as qty FROM dispatches GROUP BY besoin_id
+                          ) disp ON b.id = disp.besoin_id
+                          WHERE b.designation = ? AND b.type_besoin_id = ?
+                          HAVING reste_besoin > 0
+                          ORDER BY reste_besoin DESC, b.ville_id ASC";
+            
+            $besoinsStmt = $this->db->prepare($besoinsSql);
+            $besoinsStmt->execute([$don['designation'], $don['type_besoin_id']]);
+            $besoins = $besoinsStmt->fetchAll();
+
+            foreach ($besoins as $besoin) {
+                if ($resteDon <= 0) break;
+
+                $aDistribuer = min($resteDon, $besoin['reste_besoin']);
+
+                if ($aDistribuer > 0) {
+                    $this->create([
+                        'don_id' => $don['id'],
+                        'ville_id' => $besoin['ville_id'],
+                        'besoin_id' => $besoin['id'],
+                        'quantite_attribuee' => $aDistribuer
+                    ]);
+                    $resteDon -= $aDistribuer;
+                    $totalDispatched += $aDistribuer;
+                }
+            }
+        }
+
+        return $totalDispatched;
+    }
+
+
     public function simulerDispatch() {
         // Reset existing dispatches
         $this->resetAll();

@@ -64,6 +64,23 @@ CREATE TABLE dispatches (
 );
 
 
+CREATE TABLE achats (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    besoin_id INT NOT NULL,
+    ville_id INT NOT NULL,
+    quantite INT NOT NULL,
+    montant_ht DECIMAL(15,2) NOT NULL,
+    frais_pourcent DECIMAL(5,2) NOT NULL DEFAULT 10.00,
+    montant_ttc DECIMAL(15,2) NOT NULL,
+    date_achat DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_besoin_achat (besoin_id),
+    INDEX idx_ville_achat (ville_id),
+    CONSTRAINT fk_achats_besoins FOREIGN KEY (besoin_id) REFERENCES besoins(id) ON DELETE CASCADE,
+    CONSTRAINT fk_achats_villes FOREIGN KEY (ville_id) REFERENCES villes(id) ON DELETE CASCADE
+);
+
+
 INSERT INTO types_besoin (nom, description) VALUES
 ('Nature', 'Besoins en nature : riz, huile, eau, nourriture...'),
 ('Matériaux', 'Besoins en matériaux : tôle, clou, bois, ciment...'),

@@ -3,12 +3,26 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 session_start();
 
-
 Flight::set('flight.views.path', __DIR__ . '/app/views');
 Flight::set('flight.log_errors', true);
 
 
-define('BASE_URL', '');
+$baseUrl = '';
+if (!empty($_SERVER['SCRIPT_NAME'])) {
+    $dir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
+    if ($dir !== '' && $dir !== '.') {
+        $baseUrl = $dir;
+    }
+}
+
+if ($baseUrl === '' && !empty($_SERVER['DOCUMENT_ROOT'])) {
+    $docRoot = rtrim(str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'])), '/');
+    $appRoot = rtrim(str_replace('\\', '/', __DIR__), '/');
+    if (strpos($appRoot, $docRoot) === 0) {
+        $baseUrl = substr($appRoot, strlen($docRoot));
+    }
+}
+define('BASE_URL', $baseUrl);
 
 function base_url($path = '') {
     $base = rtrim(BASE_URL, '/');

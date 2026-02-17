@@ -1,21 +1,28 @@
 <?php
-// Charger l'autoloader de Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// Démarrer la session
 session_start();
 
-// Configuration de Flight
 Flight::set('flight.views.path', __DIR__ . '/../app/views');
 Flight::set('flight.log_errors', true);
 
-// ===== BASE URL =====
-// Changer cette valeur selon l'environnement de déploiement
-// Ex: '/buzz/public' si l'app est dans un sous-dossier
-// Ex: '' ou '/' pour la racine
-define('BASE_URL', '');
+// Détection automatique du BASE_URL
+$baseUrl = '';
+if (!empty($_SERVER['SCRIPT_NAME'])) {
+    $dir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
+    if ($dir !== '' && $dir !== '.') {
+        $baseUrl = $dir;
+    }
+}
+if ($baseUrl === '' && !empty($_SERVER['DOCUMENT_ROOT'])) {
+    $docRoot = rtrim(str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'])), '/');
+    $appRoot = rtrim(str_replace('\\', '/', realpath(__DIR__ . '/..')), '/');
+    if (strpos($appRoot, $docRoot) === 0) {
+        $baseUrl = substr($appRoot, strlen($docRoot));
+    }
+}
+define('BASE_URL', $baseUrl);
 
-// Helper pour générer les URLs avec le base_url
 function base_url($path = '') {
     $base = rtrim(BASE_URL, '/');
     if ($path === '' || $path === '/') {
@@ -24,21 +31,17 @@ function base_url($path = '') {
     return $base . '/' . ltrim($path, '/');
 }
 
-// Helper pour les assets
 function asset($path) {
     return base_url('assets/' . ltrim($path, '/'));
 }
 
-// Rendre les helpers disponibles dans Flight
 Flight::map('baseUrl', function($path = '') {
     return base_url($path);
 });
 Flight::set('flight.base_url', BASE_URL);
 
-// Charger la configuration de la base de données
 $dbConfig = require __DIR__ . '/../app/Config/database.php';
 
-// Connexion à la base de données
 try {
     $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['database']};charset={$dbConfig['charset']}";
     $pdo = new PDO($dsn, $dbConfig['username'], $dbConfig['password'], [
@@ -47,21 +50,17 @@ try {
         PDO::ATTR_EMULATE_PREPARES => false
     ]);
     
-    // Enregistrer la connexion PDO dans Flight
     Flight::register('db', 'PDO', array($dsn, $dbConfig['username'], $dbConfig['password']));
     
-    // Définir le fuseau horaire
     $pdo->exec("SET time_zone = '+03:00'");
     
 } catch (PDOException $e) {
     die("Erreur de connexion à la base de données: " . $e->getMessage());
 }
 
-// Configuration des chemins
 Flight::set('app.root', realpath(__DIR__ . '/../'));
 Flight::set('app.public', __DIR__);
 
-// Helper pour les messages flash
 Flight::map('flash', function($type, $message) {
     if (!isset($_SESSION['flash'])) {
         $_SESSION['flash'] = [];
@@ -69,7 +68,6 @@ Flight::map('flash', function($type, $message) {
     $_SESSION['flash'][$type][] = $message;
 });
 
-// Helper pour afficher les messages flash
 Flight::map('displayFlash', function() {
     if (!isset($_SESSION['flash'])) {
         return '';
@@ -92,14 +90,11 @@ Flight::map('displayFlash', function() {
     return $html;
 });
 
-// Helper pour formater les nombres en Ariary
 Flight::map('formatMoney', function($amount) {
     return number_format($amount, 0, ',', ' ') . ' Ar';
 });
 
-// Charger les routes
 require_once __DIR__ . '/../app/Config/Routes.php';
 App\Config\Routes::register();
 
-// Démarrer l'application
 Flight::start();
